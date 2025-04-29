@@ -6,10 +6,10 @@ using namespace std;
 
 // Estructura para representar un esbirro
 struct Esbirro {
-    int vida;
-    int ataque;
-    bool es_cano;
-    int ataques_recibidos;
+    int vida; //Puntos de vida del esbirro
+    int ataque;//Daño que puede causar al mechón
+    bool es_cano;//Si el esbirro es cano (puede dividirse)
+    int ataques_recibidos;//Veces que ha sido atacado por el mechón
 
     // Constructor
     Esbirro(int v, int a, bool c) : vida(v), ataque(a), es_cano(c), ataques_recibidos(0) {}
@@ -43,24 +43,24 @@ int main() {
     int poder_ataque = 2;        // Poder de ataque inicial del mechón
 
     // Simulación de la batalla
-    while (!cola.empty() && vida_mechon > 0) {
+    while (!cola.empty() && vida_mechon > 0) { //Mientras queden esbirros y el mechon siga vivo, continua la batalla
         Esbirro* actual = cola.front();
-        cola.pop();
+        cola.pop(); //Se saca el primer esbirro de la cola
 
         // 1. El mechón ataca primero
         int danio_causado = min(poder_ataque, actual->vida);
         actual->vida -= danio_causado;
         actual->ataques_recibidos++;
-        danio_total += danio_causado;        
+        danio_total += danio_causado; //Se suma el daño al total y se registra el daño recibido       
 
         // 2. Verificar si el esbirro murió
         if (actual->vida <= 0) {
-            esbirros_eliminados++;
+            esbirros_eliminados++;//Si el esbirro muere, se incrementa el contador de esbirros eliminados
             // Aumentar poder de ataque después de 5 esbirros eliminados
             if (esbirros_eliminados % 5 == 0) {
                 poder_ataque++;
             }
-            delete actual;
+            delete actual;//Se libera memoria del esbirro y se salta a la siguiente iteración
             continue;
         }
 
@@ -79,18 +79,18 @@ int main() {
 
         // 4. Si el esbirro sobrevive y no se divide, ataca al mechón
         vida_mechon -= actual->ataque;
-        cola.push(actual);
+        cola.push(actual);//vuelve al final de la cola
     }
 
     // Limpieza de memoria
-    while (!cola.empty()) {
+    while (!cola.empty()) {//Se limpian los esbirros restantes que quedaron en la cola
         delete cola.front();
         cola.pop();
     }
 
     // Impresión de resultados
-    cout << danio_total << endl;
-    cout << (vida_mechon > 0 ? "EZ pizi" : "RIP mechon") << endl;
+    cout << danio_total << endl;//Daño total que hizo el mechon
+    cout << (vida_mechon > 0 ? "EZ pizi" : "RIP mechon") << endl;//Se imprime si sobrevivió o no
 
     return 0;
 }
